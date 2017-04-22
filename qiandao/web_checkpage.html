@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>签到统计</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	    <meta name="description" content="Demo project">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script type="text/javascript" src="./libs/jquery.min.js"></script>
+		<script type="text/javascript" src="./libs/vue.js"></script>
+		<script type="text/javascript" src="./libs/es6-promise.min.js"></script>
+		<script type="text/javascript" src="./libs/perfect-scrollbar/js/perfect-scrollbar.min.js"></script>
+		<link rel="stylesheet" href="./libs/perfect-scrollbar/css/perfect-scrollbar.min.css">
+		<link rel="stylesheet" href="style_web.css">
+		<style>
+			.fade-enter-active, .fade-leave-active {
+				transition: all 1s ease;
+			}
+			.fade-enter-active {
+				top: 10px;
+			}
+			.fade-leave-active {
+				top: -10px;
+			}
+			.fade-enter, .fade-leave-active {
+				opacity: 0;
+			}
+			.webcheck-current-check {
+				position: relative;
+			}
+			.webcheck-current-check .anim-character {
+				color: rgb(243,51,35);
+				position: absolute;
+				right: 70px;
+			}
+			html {
+				font-family: "Microsoft YaHei", 微软雅黑；
+			}
+			#page {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="page" class="webcheck-page">
+			<h1><span class="left">签到详情</span>{{conference_info.title}}<span class="right">日期：{{today}}</span></h1>
+			<div class="webcheck-stat">
+				<table class="table-init table-stat">
+					<tbody>
+						<tr>
+							<td style="width:100px;text-align:right;"><img class="check-img" src="./imgs/03.png" alt=""></td>
+							<td class="webcheck-current-check">
+								<p>目前签到人数：<span class="big">{{conference_info.count}}</span>人</p>
+								<p>{{conference_info.type}}参与人数：<span>{{conference_info.sum}}</span>人</p>
+								<transition name="fade">
+									<div class="anim-character" v-if="showAnim">
+										{{variation}}
+									</div>
+								</transition>
+							</td>
+							<td style="width:110px;">
+								<!-- <button class="btn-grad green"><img src="./imgs/06.png" alt="">手动签到</button>
+								<button class="btn-grad red"><img src="./imgs/签到-网站01_06.png" alt="">导出签到表</button> -->
+								<img style="display:block;cursor:pointer;" src="./imgs/manual.png" alt="">
+								<img style="display:block;cursor:pointer;margin-top:15px;" src="./imgs/export.png" alt="" @click="exportExcel">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="webcheck-list">
+				<h2>签到动态</h2>
+				<div class="webcheck-table-fix">
+					<table class="table-list table-init">
+						<thead>
+							<tr>
+								<td>姓名</td>
+								<td>身份</td>
+								<td>所在分组</td>
+								<td>状态</td>
+								<td>时间</td>
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<div class="webcheck-table-scroll" ref="scroll">
+					<table class="table-list table-init">
+						<tbody>
+							<tr v-for="item in sign_list" :key="item.id">
+								<td>{{item.name}}</td>
+								<td>{{item.identity}}</td>
+								<td>{{item.group_name}}</td>
+								<td>签到成功</td>
+								<td>{{item.time | time}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>	
+			<div class="footer">
+				<div class="footer-logo"><img src="./imgs/logo.png" alt=""></div>
+				<p>本次活动由云上组织（Vstyle.Inc）提供会议支持</p>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		function getQueryVariable(variable) {
+	        var query = window.location.href
+	        var vars = query.split("?").pop().split('&')
+	        for (var i=0;i<vars.length;i++) {
+	            var pair = vars[i].split("=");
+	            if(pair[0] == variable){return pair[1];}
+	        }
+	        return(false);
+	    }
+
+		window.$vm = new Vue({
+			el: '#page',
+			data: function(){
+				var today = new Date()
+				return {
+					showAnim: false,
+					variation: 0,
+					conference_info: {
+						count: ""
+					},
+					sign_list: [],
+					today: today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getUTCDate()
+				}
+			},
+			watch: {
+				'conference_info.count': function(val, oldVal){
+					//console.log(val, oldVal)
+					if (oldVal !== "") {
+						this.showAnim = true
+						var num = parseInt(val) - parseInt(oldVal)
+						this.variation = num < 0 ? num : '+' + num
+						//console.log('variation:' + this.variation)
+						var self = this
+						setTimeout(function(){
+							self.showAnim = false
+						},1000)
+					}
+				}
+			},
+			methods: {
+				getData: function(){
+					var self = this
+					Promise.resolve($.ajax({
+						url: '/home/conference/conference_sign_list',
+						data: {
+							conference_id: getQueryVariable('conference_id')
+						}
+					})).then(function(res){
+						if (res.ret == 0) {
+							self.conference_info = res.msg.conference_info
+							self.sign_list = res.msg.sign_list
+							setTimeout(function(){ self.getData() }, 2000)
+						} else {
+							return Promise.reject(new Error(res.msg))
+						}
+					})
+				},
+				exportExcel: function(){
+					var a = document.createElement('a')
+					a.href = '/home/conference/export?conference_id=' + getQueryVariable('conference_id')
+					a.click()
+				}
+			},
+			mounted: function(){
+				page.style.display = "block"
+				Ps.initialize(this.$refs.scroll)
+				this.getData()
+			},
+			filters: {
+				time: function(time){
+					var timestamp = parseInt(time) * 1000
+					_date.setTime(timestamp)
+
+					var year = _date.getFullYear()
+					var month = _date.getMonth() + 1
+					var date = _date.getUTCDate()
+					var hour = _date.getHours()
+					var min = _date.getMinutes()
+					var sec = ('00' + _date.getSeconds())
+					sec = sec.substring(sec.length-2)
+
+					return year + '.' + month + '.' + date + '.' + '  ' + hour + ':' + min + ':' + sec
+				}
+			}
+		})
+
+		var _date = new Date()
+	</script>
+</html>

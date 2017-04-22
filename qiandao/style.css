@@ -1,0 +1,77 @@
+html,body {
+	margin:0;
+	padding: 0;
+}
+h1, h2, p {
+	margin: 0;
+	padding: 0;
+}
+.check-page {
+	text-align:center;
+}
+.check-page > h1 {
+	padding: 15px 60px;
+	font-size: 18px;
+	line-height: 25px;
+	background: #f8f8f8;
+	border-bottom: 1px solid #d9d9d9;
+}
+.check-page-content > h2 {
+	font-size: 20px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	letter-spacing: 15px;
+	margin-left: 15px;
+
+	margin-top: 25px;
+	margin-bottom: 30px;
+}
+
+.check-page-content > .check-page-avatar {
+	overflow: hidden;
+	border-radius: 50%;
+	background: #eee;
+	width: 85px;
+	height: 85px;
+	display: inline-block;
+	margin-top: 5px;
+	margin-bottom: 35px;
+}
+
+.check-page-avatar > img {
+	width: 100%;
+	height: 100%;	
+}
+.check-page-content > .check-page-info {
+	margin-bottom: 25px;
+	padding-left: 40px;
+	padding-right: 40px;
+	font-size: 14px;
+	line-height: 21px;
+	text-align: left;
+
+	margin-bottom: 40px;
+} 
+
+.check-page-tip {
+	margin-bottom: 25px;
+}
+.check-page-tip > * {
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 35px;
+}
+.check-page-tip > img {
+	width: 35px;
+	height: 35px;
+	margin-right: 15px;
+}
+.check-page-tip > span {
+	font-size: 18px;
+}
+.check-page-tip > span.green {
+	color: rgb(108,206,85);
+}
+.check-page-tip > span.red {
+	color: rgb(235,54,40);
+}

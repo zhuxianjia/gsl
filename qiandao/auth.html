@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>二维码签到</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	    <meta name="description" content="Demo project">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="style.css">
+		<script type="text/javascript" src="./libs/jquery.min.js"></script>
+		<script type="text/javascript" src="./libs/vue.js"></script>
+		<script type="text/javascript" src="./libs/es6-promise.min.js"></script>
+		<style>
+			#page {
+				display: none;
+			}
+			html {
+				font-family: "Microsoft YaHei", 微软雅黑；
+			}
+		</style>
+	</head>
+	<body>
+		<div id="page">
+			<div class="check-page">
+			<h1 class="check-page-title">{{conference_info.title}}</h1>
+			<div class="check-page-content" v-if="user_info.name !== undefined">
+				<h2>签到处</h2>
+				<div class="check-page-avatar">
+					<img :src="user_info.photo" alt="">
+				</div>
+				<div class="check-page-info">
+					<p>{{user_info.name}}{{user_info.identity}}，欢迎您参加此次{{conference_info.type}}，您是第{{user_info.number}}位完成二维码签到的会员</p>
+				</div>
+				<div class="check-page-tip">
+					<img src="./imgs/APP_04_03.png"></img><span class="green">签到成功</span>
+				</div> 
+			</div>
+			<div class="check-page-content" v-if="user_info.name === undefined">
+				<h2>签到处</h2>
+				<div class="check-page-avatar">
+					<img src="./imgs/APP_03.png" alt="">
+				</div>
+				<div class="check-page-info">
+					<p>对不起，未能在参会名单中查询到您的合法身份，请联系{{conference_info.type}}工作人员进行确认</p>
+				</div>
+				<div class="check-page-tip">
+					<img src="./imgs/APP_03.png"></img><span class="red">签到失败</span>
+				</div>
+			</div>	
+		</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="http://hs-server.780.cn/apps/api.js"></script> 
+	<script type="text/javascript">
+	Bridge.supportShare(false);
+	function getQueryVariable(variable) {
+        var query = window.location.href
+        var vars = query.split("?").pop().split('&')
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == variable){return pair[1];}
+        }
+        return(false);
+    }
+
+	Bridge.setAppID("21216");
+	Bridge.tryLogin(function(data){
+		if (!data) {
+			alert('请使用杭商之家APP进行扫描签到')
+			// alert('签到失败:' + e.message)
+			window.location.href = 'http://yzz.780.cn/hs'
+			return
+		}
+		Promise.resolve($.ajax({
+			url: '/home/conference/sign_in',
+			data: {
+				conference_id: getQueryVariable('conference_id'),
+				open_id: data.openid //'99fcb5882feb5e22d5188e3b3974b13f' //
+			}
+		})).then(function(res){
+			//console.dir(res)
+
+			if (res.ret == 0 || res.ret == 301) {
+				window.$vm = new Vue({
+					el: '#page',
+					data: function(){
+						return {
+							user_info: res.data.user_info || {},
+							conference_info: res.data.conference_info
+						}
+					},
+					mounted: function(){
+						//alert(JSON.stringify(res))
+						page.style.display = 'block'
+					}
+				})
+			} else {
+				return Promise.reject(new Error(res.msg))
+			}
+		}).catch(function(e){
+			alert('签到失败:' + e.message)
+		})
+	});
+
+	</script>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" manifest="../cacheSetting/cacheSetting.appcache?201612220950">
+<!-- <html lang="en"> -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>银监门户</title>
+    <!-- <link rel="stylesheet" type="text/css" href="../source/font/flaticon.css?201607251751"> -->
+    <!-- <link rel="stylesheet" type="text/css" href="../source/fontnew/flaticon.css?201607251751"> -->
+    <link rel="stylesheet" href="../source/css/onLarge.css">
+    <link rel="stylesheet" type="text/css" href="../source/css/barselect.css">
+    <link rel="stylesheet" type="text/css" href="../source/css/mui.min.css">
+    <link rel="stylesheet" type="text/css" href="../source/css/app.css" />
+    <link rel="stylesheet" type="text/css" href="../source/css/media.css">
+    <link rel="stylesheet" type="text/css" href="../source/css/reset.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../source/css/downlist.css?201607301738"> -->
+    <script src="../source/js/jquery-1.7.2.js"></script>
+    <script src="../source/js/public.js"></script>    
+    <script src="http://yzz-server.780.cn/apps/api.js"></script>   
+    <!-- <script src="../source/js/app.js"></script> -->
+    <script src="../source/js/ajax.js"></script>
+    <!-- <script src="../source/js/public.js?201607291406"></script> -->
+    <script src="../source/js/mui.min.js"></script>
+    <script src="../source/js/mui.pullToRefresh.js"></script>
+    <script src="../source/js/mui.pullToRefresh.material.js"></script>
+    <script src="../source/js/barselect.js"></script>
+    <script src="../source/js/mui.zoom.js"></script>
+    <script src="../source/js/mui.previewimagenew.js"></script>
+    <script src="../source/js/index.js"></script>
+</head>
+<style>
+html,
+body {
+    background-color: #efeff4;
+}
+.mui-bar~.mui-content .mui-fullscreen {
+    top: 0px;
+    height: auto;
+}
+
+.mui-pull-top-tips {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    margin-left: -25px;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    z-index: 1;
+}
+
+.mui-bar~.mui-pull-top-tips {
+    top: 24px;
+}
+
+.mui-pull-top-wrapper {
+    width: 42px;
+    height: 42px;
+    display: block;
+    text-align: center;
+    background-color: #efeff4;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    background-clip: padding-box;
+    box-shadow: 0 4px 10px #bbb;
+    overflow: hidden;
+}
+
+.mui-pull-top-tips.mui-transitioning {
+    -webkit-transition-duration: 200ms;
+    transition-duration: 200ms;
+}
+
+.mui-pull-top-tips .mui-pull-loading {
+    /*-webkit-backface-visibility: hidden;
+                -webkit-transition-duration: 400ms;
+                transition-duration: 400ms;*/
+    margin: 0;
+}
+
+.mui-pull-top-wrapper .mui-icon,
+.mui-pull-top-wrapper .mui-spinner {
+    margin-top: 7px;
+}
+
+.mui-pull-top-wrapper .mui-icon.mui-reverse {
+    /*-webkit-transform: rotate(180deg) translateZ(0);*/
+}
+
+.mui-pull-bottom-tips {
+    text-align: center;
+    background-color: #efeff4;
+    font-size: 15px;
+    line-height: 40px;
+    color: #777;
+}
+
+.mui-pull-top-canvas {
+    overflow: hidden;
+    background-color: #fafafa;
+    border-radius: 40px;
+    box-shadow: 0 4px 10px #bbb;
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+}
+
+.mui-pull-top-canvas canvas {
+    width: 40px;
+}
+
+.mui-slider-indicator.mui-segmented-control {
+    background-color: #efeff4;
+}
+body,html {
+    height: 100%;
+}
+.mui-content{
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+/*.ios-content{
+    text-align: left;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0;
+    height: 100%;*/
+    /*bottom: 0;*/
+  /*  overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}*/
+/*.transitioning{
+    -webkit-transition: -webkit-transform 0.25s ease;
+            transition:         transform 0.25s ease;
+}*/
+</style>
+
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="mui-content ios-content">
+                <div id="slider" class="mui-slider mui-fullscreen mui-slider-overflowa">
+                    <div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+                        <div class="mui-scroll columnList" id="scrollBar">
+                            <a class="mui-control-item mui-active" href="#itemnmobile" id="mainPage" style="padding-left:10px;">
+                                首页
+                            </a>
+                        </div>
+                        <div class="plusContainer">
+                            <div class="plusa">
+                                <img class="plusi" src="../source/img/plus.png"> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mui-slider-group" id="myscroll">
+                        <div id="itemnmobile" class="mui-slider-item mui-control-content mui-active">
+                            <div id="scroll1" class="mui-scroll-wrapper">
+                                <div class="mui-scroll">
+                                    <div id="slider" class="mui-slider mui-slider-overflowb">
+                                        <div class="mui-slider-group mui-slider-loop" id="lunboContainer">
+                                        </div>
+                                        <div class="mui-slider-indicator mui-text-right" id="lunbodot" style="bottom:0px">
+                                        </div>
+                                    </div>
+                                    <ul class="mui-table-view" id="mainList">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+if(!window.location.search){
+    window.location.search = new Date() - 0;
+}
+$(".plusContainer").on("tap",'.plusi', function() {
+    if(debuggerModel){
+        mui.openWindow({
+            url: "book.html",
+        })
+    }
+    else{
+        Bridge.openMobileWindow("book.html?timestamp=" + new Date().getTime(), "订阅栏目", function (result) {  
+            location.reload();         
+        }); 
+        Bridge.closeMobileWindow("刷新");
+    }      
+})
+</script>
+</body>
+</html>
